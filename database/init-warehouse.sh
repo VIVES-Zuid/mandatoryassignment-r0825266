@@ -1,0 +1,19 @@
+#!/bin/bash
+set -e
+
+mongo <<EOF
+use warehouseDB
+
+db.warehouseitems.insertMany([
+  { name: "Item A", quantity: 10, location: "Shelf 1" },
+  { name: "Item B", quantity: 5, location: "Shelf 2" },
+  { name: "Item C", quantity: 20, location: "Shelf 3" },
+  { name: "Item D", quantity: 8, location: "Shelf 1" },
+  { name: "Item E", quantity: 15, location: "Shelf 2" },
+  { name: "Item F", quantity: 12, location: "Shelf 3" },
+  { name: "Item G", quantity: 7, location: "Shelf 4" },
+  { name: "Item H", quantity: 25, location: "Shelf 1" },
+  { name: "Item I", quantity: 18, location: "Shelf 2" },
+  { name: "Item J", quantity: 30, location: "Shelf 3" }
+])
+EOF
