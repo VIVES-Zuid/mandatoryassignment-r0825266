@@ -1,0 +1,25 @@
+<h1>Warehouse Items</h1>
+
+<table cellpadding="6">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Quantity</th>
+      <th>Location</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (item of items; track item){
+    <tr>
+      <td>{{ item._id }}</td>
+      <td>{{ item.name }}</td>
+      <td>{{ item.quantity }}</td>
+      <td>{{ item.location }}</td>
+    </tr>
+    }
+  </tbody>
+</table>
+
+<br>
+<p>Number of items: {{ items.length }}</p>
