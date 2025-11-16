@@ -1,7 +1,7 @@
 # Node.js
 backend/node_modules/
-dist/
-.env
+backend/dist/
+backend/.env
 
 # Angular
 frontend/node_modules/
@@ -9,3 +9,11 @@ frontend/dist/
 
 # Docker
 *.log
+
+# Editor directories and files
+.vscode/
+.idea/
+
+# Environment files
+*.env
+
