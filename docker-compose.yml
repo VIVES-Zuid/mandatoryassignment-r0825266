@@ -1,0 +1,29 @@
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    env_file:
+      - ./backend/.env
+    ports:
+      - "5000:5000"
+    depends_on:
+      - database
+
+  database:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: warehouseDB
+    volumes:
+      - mongo_data:/data/db
+      - ./database/init-warehouse.sh:/docker-entrypoint-initdb.d/init-warehouse.sh:ro
+
+volumes:
+  mongo_data:
