@@ -1,0 +1,24 @@
+# Node modules (we install them in Docker, so we ignore heree)
+**/node_modules
+**/npm-debug.log
+**/yarn-error.log
+
+# Build/dist folders
+**/dist
+**/build
+
+# Local environment files
+**/.env
+**/*.local
+
+# Logs
+**/logs
+**/*.log
+
+# OS/system files
+.DS_Store
+Thumbs.db
+
+# IDE/editor folders
+.vscode
+.idea

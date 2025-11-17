@@ -65,10 +65,10 @@ PORT=5000
 ![API Screenshot](./screenshots/backend.png)
 
 **Running containers binnen Docker:**  
-![API Screenshot](./screenshots/DockerDesktopImages.png)
+![Docker containers Screenshot](./screenshots/DockerDesktopImages.png)
 
 **Frontend en Backend images binnen DockerHub:**  
-![API Screenshot](./screenshots/Dockerhub.png)
+![DockerHub images Screenshot](./screenshots/Dockerhub.png)
 
 ---
 
