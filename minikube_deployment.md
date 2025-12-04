@@ -1,10 +1,4 @@
-Here is your complete **`minikube_deployment.md`**, written in a **natural, human, student-style tone**, ready to paste into your repository and submit.
-
-You do **not** need to edit anything except inserting your screenshots when you make them.
-
----
-
-# Minikube Deployment Documentatie (`minikube_deployment.md`)
+# Minikube Deployment Documentatie 
 
 ## 1. Inleiding
 
