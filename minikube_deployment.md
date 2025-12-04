@@ -104,9 +104,9 @@ kubectl logs deployment/mongo
 
 ### **Frontend openen**
 
-1. Haal het Minikube IP op: minikube ip
+1. Haal het Minikube frontend url op van de root van de applicatie map:  minikube service frontend --url
 
-2. Open de NodePort: http://<minikube-ip>:31000
+2. Open de weergegeven link (url): http://127.0.0.1:28651
 
 
 De applicatie toont dan de lijst met warehouse-items die uit de database komen.
