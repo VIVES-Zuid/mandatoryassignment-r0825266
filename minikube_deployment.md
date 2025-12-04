@@ -115,15 +115,16 @@ De applicatie toont dan de lijst met warehouse-items die uit de database komen.
 
 ## 7. Screenshots
 
-**1. Terminal-output van Minikube deploy**
-
+**1. Terminal-output van Minikube deploy en suceesvol opstart**
+![Deployment](./screenshots/Deployment_to_minikube.png)
+![Frontend](./screenshots/Minikube_started_successfully1.png)
 
 **2. Browserweergave van de frontend via NodePort**
+![Frontend](./screenshots/frontend.png)
 
-
-
-**3. Backend logs, database logs, kubectl get all**
-
+**3. Backend logs, frontend logs, database logs, kubectl get all**
+![kubectl getAll](./screenshots/kubectl_getAll.png)
+![Frontend](./screenshots/kubectl_Logs.png)
 
 
 ---
