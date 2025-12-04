@@ -122,7 +122,7 @@ De applicatie toont dan de lijst met warehouse-items die uit de database komen.
 
 
 
-**3. Backend logs, database logs, kubectl get svc**
+**3. Backend logs, database logs, kubectl get all**
 
 
 
