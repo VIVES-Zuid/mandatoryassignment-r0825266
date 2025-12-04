@@ -16,11 +16,6 @@ spec:
         - name: mongo
           image: mongo:latest
           env:
-            - name: MONGO_INITDB_DATABASE
-              valueFrom:
-                configMapKeyRef:
-                  name: mongo-config
-                  key: MONGO_DB
             - name: MONGO_INITDB_ROOT_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -33,3 +28,10 @@ spec:
                   key: MONGO_PASSWORD
           ports:
             - containerPort: 27017
+          volumeMounts:
+            - name: init-script
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: init-script
+          configMap:
+            name: mongo-init-config
