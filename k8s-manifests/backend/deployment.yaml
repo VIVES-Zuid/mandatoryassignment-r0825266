@@ -17,7 +17,7 @@ spec:
           image: r0825266/backend:latest
           env:
             - name: MONGO_URI
-              value: "mongodb://mongo:27017/warehouseDB"
+              value: "mongodb://root:rootpassword@mongo:27017/warehouseDB?authSource=admin"
             - name: PORT
               value: "5000"
           ports:

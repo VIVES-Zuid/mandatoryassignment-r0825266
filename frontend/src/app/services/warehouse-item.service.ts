@@ -17,25 +17,28 @@ export class WarehouseItemService {
   }
 }*/
 
+
+
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { WarehouseItem } from '../models/warehouse-item';
-
-const API_URL = 'http://localhost:5000/api/warehouse-items';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WarehouseItemService {
 
+  private apiUrl = environment.apiUrl;
+  //private apiUrl = `${environment.apiUrl}/warehouse-items`;
+
   constructor(private http: HttpClient) { }
 
   getAllItems(): Observable<WarehouseItem[]> {
-    return this.http.get<WarehouseItem[]>(API_URL)
-      .pipe(
-        tap(result => console.log("Fetched warehouse items:", result))
-      );
+    return this.http.get<WarehouseItem[]>(this.apiUrl).pipe(
+      tap(result => console.log("Fetched warehouse items:", result))
+    );
   }
 }
-
