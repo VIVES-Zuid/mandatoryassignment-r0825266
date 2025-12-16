@@ -1,4 +1,4 @@
-package be.vives.taskmanager.application.result;
+package be.vives.taskmanager.application.dto.result;
 
 import java.time.LocalDateTime;
 import java.util.List;

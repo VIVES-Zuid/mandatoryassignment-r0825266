@@ -1,4 +1,4 @@
-package be.vives.taskmanager.application.request;
+package be.vives.taskmanager.application.dto.request;
 
 import be.vives.taskmanager.domain.model.enumerator.TaskStatus;
 import jakarta.validation.constraints.FutureOrPresent;

@@ -1,4 +1,4 @@
-package be.vives.taskmanager.application.result;
+package be.vives.taskmanager.application.dto.result;
 
 import be.vives.taskmanager.domain.model.enumerator.TaskStatus;
 
