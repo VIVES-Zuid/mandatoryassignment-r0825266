@@ -9,8 +9,8 @@ import be.vives.taskmanager.domain.model.User;
 import be.vives.taskmanager.infrastructure.persistence.repository.ProjectRepository;
 import be.vives.taskmanager.infrastructure.persistence.repository.UserRepository;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class ProjectService {
@@ -23,21 +23,24 @@ public class ProjectService {
         this.userRepository = userRepository;
     }
 
-    public List<ProjectResult> getProjectsForUser(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User", username));
+    public ProjectResult getProjectById(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Project", projectId));
 
-        return projectRepository.findByOwner(user)
-                .stream()
-                .map(ProjectMapper::toResult)
-                .collect(Collectors.toList());
+        return ProjectMapper.toResult(project);
+    }
+
+    public Page<ProjectResult> findAllProjectsForUser(String username, Pageable pageable) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", username));
+
+        return projectRepository.findByOwner(user, pageable)
+                .map(ProjectMapper::toResult);
     }
 
     public ProjectResult createProject(String username, ProjectRequest request) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User", username));
+                .orElseThrow(() -> new ResourceNotFoundException("User", username));
 
         Project project = ProjectMapper.toEntity(request);
         project.setOwner(user);
@@ -48,10 +51,23 @@ public class ProjectService {
 
     public ProjectResult updateProject(Long projectId, ProjectRequest request) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Project", projectId));
+                .orElseThrow(() -> new ResourceNotFoundException("Project", projectId));
 
         ProjectMapper.updateEntity(project, request);
+        return ProjectMapper.toResult(projectRepository.save(project));
+    }
+
+    public ProjectResult patchProject(Long projectId, ProjectRequest request) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Project", projectId));
+
+        if (request.getName() != null) {
+            project.setName(request.getName());
+        }
+        if (request.getDescription() != null) {
+            project.setDescription(request.getDescription());
+        }
+
         return ProjectMapper.toResult(projectRepository.save(project));
     }
 

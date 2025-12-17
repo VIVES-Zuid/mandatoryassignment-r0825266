@@ -8,9 +8,9 @@ import be.vives.taskmanager.domain.model.*;
 import be.vives.taskmanager.domain.model.enumerator.*;
 import be.vives.taskmanager.infrastructure.persistence.repository.ProjectRepository;
 import be.vives.taskmanager.infrastructure.persistence.repository.TaskRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -23,22 +23,25 @@ public class TaskService {
         this.projectRepository = projectRepository;
     }
 
-    public List<TaskResult> getTasksForProject(Long projectId) {
+    public TaskResult getTaskById(Long taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new ResourceNotFoundException("Task", taskId));
+
+        return TaskMapper.toResult(task);
+    }
+
+    public Page<TaskResult> findAllTasksForProject(Long projectId, Pageable pageable) {
         if (!projectRepository.existsById(projectId)) {
             throw new ResourceNotFoundException("Project", projectId);
         }
 
-        return taskRepository.findByProjectId(projectId)
-                .stream()
-                .map(TaskMapper::toResult)
-                .collect(Collectors.toList());
+        return taskRepository.findByProjectId(projectId, pageable)
+                .map(TaskMapper::toResult);
     }
 
-    public List<TaskResult> getTasksByStatus(Long projectId, TaskStatus status) {
-        return taskRepository.findByProjectIdAndStatus(projectId, status)
-                .stream()
-                .map(TaskMapper::toResult)
-                .collect(Collectors.toList());
+    public Page<TaskResult> findAllTasksByStatus(Long projectId, TaskStatus status, Pageable pageable) {
+        return taskRepository.findByProjectIdAndStatus(projectId, status, pageable)
+                .map(TaskMapper::toResult);
     }
 
     public TaskResult createTask(Long projectId, TaskRequest request) {
@@ -59,6 +62,26 @@ public class TaskService {
                         new ResourceNotFoundException("Task", taskId));
 
         TaskMapper.updateEntity(task, request);
+        return TaskMapper.toResult(taskRepository.save(task));
+    }
+
+    public TaskResult patchTask(Long taskId, TaskRequest request) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new ResourceNotFoundException("Task", taskId));
+
+        if (request.getTitle() != null) {
+            task.setTitle(request.getTitle());
+        }
+        if (request.getDescription() != null) {
+            task.setDescription(request.getDescription());
+        }
+        if (request.getStatus() != null) {
+            task.setStatus(request.getStatus());
+        }
+        if (request.getDueDate() != null) {
+            task.setDueDate(request.getDueDate());
+        }
+
         return TaskMapper.toResult(taskRepository.save(task));
     }
 
