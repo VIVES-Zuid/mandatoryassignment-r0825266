@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -15,6 +16,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping
+@PreAuthorize("hasAnyRole('USER','ADMIN')")
 public class TaskController {
 
     private final TaskService taskService;
@@ -67,9 +69,20 @@ public class TaskController {
     }
 
     @DeleteMapping("/tasks/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id, Authentication authentication) {
+        String username = authentication.getName();
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        taskService.deleteTask(id, username, isAdmin);
+        return ResponseEntity.noContent().build();
+    }
+
+    /*@DeleteMapping("/tasks/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id, Authentication authentication) {
         String username = authentication.getName();
         taskService.deleteTask(id, username);
         return ResponseEntity.noContent().build();
-    }
+    }*/
 }

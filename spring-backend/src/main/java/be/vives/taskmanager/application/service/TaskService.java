@@ -82,13 +82,27 @@ public class TaskService {
         return TaskMapper.toResult(taskRepository.save(task));
     }
 
-    public void deleteTask(Long taskId, String username) {
-        Task task = getOwnedTask(taskId, username);
+    public void deleteTask(Long taskId, String username, boolean isAdmin) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new ResourceNotFoundException("Task", taskId));
+
+        // ownership check only if not admin
+        if (!isAdmin && !task.getProject().getOwner().getUsername().equals(username)) {
+            throw new AccessDeniedException("Not owner of task");
+        }
 
         checkIfTaskCompleted(task, "Completed tasks cannot be deleted");
 
         taskRepository.delete(task);
     }
+
+    /*public void deleteTask(Long taskId, String username) {
+        Task task = getOwnedTask(taskId, username);
+
+        checkIfTaskCompleted(task, "Completed tasks cannot be deleted");
+
+        taskRepository.delete(task);
+    }*/
 
     private Task getOwnedTask(Long taskId, String username) {
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task", taskId));

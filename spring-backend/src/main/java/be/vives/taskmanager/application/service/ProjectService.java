@@ -75,8 +75,14 @@ public class ProjectService {
         return ProjectMapper.toResult(projectRepository.save(project));
     }
 
-    public void deleteProject(Long projectId, String username) {
-        Project project = getOwnedProject(projectId, username);
+    public void deleteProject(Long projectId, String username, boolean isAdmin) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Project", projectId));
+
+        // ownership check ONLY if not admin
+        if (!isAdmin && !project.getOwner().getUsername().equals(username)) {
+            throw new AccessDeniedException("Not owner of project");
+        }
 
         boolean hasOpenTasks = project.getTasks().stream()
                 .anyMatch(task -> task.getStatus() != TaskStatus.DONE);
@@ -87,6 +93,19 @@ public class ProjectService {
 
         projectRepository.delete(project);
     }
+
+    /*public void deleteProject(Long projectId, String username) {
+        Project project = getOwnedProject(projectId, username);
+
+        boolean hasOpenTasks = project.getTasks().stream()
+                .anyMatch(task -> task.getStatus() != TaskStatus.DONE);
+
+        if (hasOpenTasks) {
+            throw new BadRequestException("Project contains active tasks");
+        }
+
+        projectRepository.delete(project);
+    }*/
 
     private Project getOwnedProject(Long projectId, String username) {
         Project project = projectRepository.findById(projectId)
