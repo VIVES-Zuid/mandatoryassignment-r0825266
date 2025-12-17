@@ -3,14 +3,14 @@ package be.vives.taskmanager.api.controller;
 import be.vives.taskmanager.application.dto.request.TaskRequest;
 import be.vives.taskmanager.application.dto.result.TaskResult;
 import be.vives.taskmanager.application.service.TaskService;
-import be.vives.taskmanager.domain.model.enumerator.*;
+import be.vives.taskmanager.domain.model.enumerator.TaskStatus;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.net.URI;
 
 @RestController
@@ -24,25 +24,26 @@ public class TaskController {
     }
 
     @GetMapping("/tasks/{id}")
-    public ResponseEntity<TaskResult> getTaskById(@PathVariable Long id) {
-        return ResponseEntity.ok(taskService.getTaskById(id));
+    public ResponseEntity<TaskResult> getTaskById(@PathVariable Long id, Authentication authentication) {
+        String username = authentication.getName();
+        return ResponseEntity.ok(taskService.getTaskById(id, username));
     }
 
     @GetMapping("/projects/{projectId}/tasks")
-    public ResponseEntity<Page<TaskResult>> findAllTasksForProject(@PathVariable Long projectId, @RequestParam(required = false) TaskStatus status, Pageable pageable) {
+    public ResponseEntity<Page<TaskResult>> findAllTasksForProject(@PathVariable Long projectId, @RequestParam(required = false) TaskStatus status, Pageable pageable, Authentication authentication) {
+        String username = authentication.getName();
+
         if (status != null) {
-            return ResponseEntity.ok(
-                    taskService.findAllTasksByStatus(projectId, status, pageable)
-            );
+            return ResponseEntity.ok(taskService.findAllTasksByStatus(projectId, status, pageable, username));
         }
-        return ResponseEntity.ok(
-                taskService.findAllTasksForProject(projectId, pageable)
-        );
+
+        return ResponseEntity.ok(taskService.findAllTasksForProject(projectId, pageable, username));
     }
 
     @PostMapping("/projects/{projectId}/tasks")
-    public ResponseEntity<TaskResult> createTask(@PathVariable Long projectId, @Valid @RequestBody TaskRequest request) {
-        TaskResult result = taskService.createTask(projectId, request);
+    public ResponseEntity<TaskResult> createTask(@PathVariable Long projectId, @Valid @RequestBody TaskRequest request, Authentication authentication) {
+        String username = authentication.getName();
+        TaskResult result = taskService.createTask(projectId, username, request);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -54,18 +55,21 @@ public class TaskController {
     }
 
     @PutMapping("/tasks/{id}")
-    public ResponseEntity<TaskResult> updateTask(@PathVariable Long id, @Valid @RequestBody TaskRequest request) {
-        return ResponseEntity.ok(taskService.updateTask(id, request));
+    public ResponseEntity<TaskResult> updateTask(@PathVariable Long id, @Valid @RequestBody TaskRequest request, Authentication authentication) {
+        String username = authentication.getName();
+        return ResponseEntity.ok(taskService.updateTask(id, username, request));
     }
 
     @PatchMapping("/tasks/{id}")
-    public ResponseEntity<TaskResult> patchTask(@PathVariable Long id, @RequestBody TaskRequest request) {
-        return ResponseEntity.ok(taskService.patchTask(id, request));
+    public ResponseEntity<TaskResult> patchTask(@PathVariable Long id, @RequestBody TaskRequest request, Authentication authentication) {
+        String username = authentication.getName();
+        return ResponseEntity.ok(taskService.patchTask(id, username, request));
     }
 
     @DeleteMapping("/tasks/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
-        taskService.deleteTask(id);
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id, Authentication authentication) {
+        String username = authentication.getName();
+        taskService.deleteTask(id, username);
         return ResponseEntity.noContent().build();
     }
 }

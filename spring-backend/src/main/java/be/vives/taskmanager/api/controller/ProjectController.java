@@ -7,9 +7,9 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.net.URI;
 
 @RestController
@@ -23,21 +23,20 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProjectResult> getProjectById(@PathVariable Long id) {
-        return ResponseEntity.ok(projectService.getProjectById(id));
+    public ResponseEntity<ProjectResult> getProjectById(@PathVariable Long id, Authentication authentication) {
+        String username = authentication.getName();
+        return ResponseEntity.ok(projectService.getProjectById(id, username));
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProjectResult>> findAllProjects(Pageable pageable) {
-        String username = "user";
-        return ResponseEntity.ok(
-                projectService.findAllProjectsForUser(username, pageable)
-        );
+    public ResponseEntity<Page<ProjectResult>> findAllProjects(Pageable pageable, Authentication authentication) {
+        String username = authentication.getName();
+        return ResponseEntity.ok(projectService.findAllProjectsForUser(username, pageable));
     }
 
     @PostMapping
-    public ResponseEntity<ProjectResult> createProject(@Valid @RequestBody ProjectRequest request) {
-        String username = "user";
+    public ResponseEntity<ProjectResult> createProject(@Valid @RequestBody ProjectRequest request, Authentication authentication) {
+        String username = authentication.getName();
         ProjectResult result = projectService.createProject(username, request);
 
         URI location = ServletUriComponentsBuilder
@@ -50,18 +49,21 @@ public class ProjectController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProjectResult> updateProject(@PathVariable Long id, @Valid @RequestBody ProjectRequest request) {
-        return ResponseEntity.ok(projectService.updateProject(id, request));
+    public ResponseEntity<ProjectResult> updateProject(@PathVariable Long id, @Valid @RequestBody ProjectRequest request, Authentication authentication) {
+        String username = authentication.getName();
+        return ResponseEntity.ok(projectService.updateProject(id, username, request));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ProjectResult> patchProject(@PathVariable Long id, @RequestBody ProjectRequest request) {
-        return ResponseEntity.ok(projectService.patchProject(id, request));
+    public ResponseEntity<ProjectResult> patchProject(@PathVariable Long id, @RequestBody ProjectRequest request, Authentication authentication) {
+        String username = authentication.getName();
+        return ResponseEntity.ok(projectService.patchProject(id, username, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
-        projectService.deleteProject(id);
+    public ResponseEntity<Void> deleteProject(@PathVariable Long id, Authentication authentication) {
+        String username = authentication.getName();
+        projectService.deleteProject(id, username);
         return ResponseEntity.noContent().build();
     }
 }

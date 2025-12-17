@@ -10,6 +10,7 @@ import be.vives.taskmanager.infrastructure.persistence.repository.ProjectReposit
 import be.vives.taskmanager.infrastructure.persistence.repository.TaskRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,52 +24,47 @@ public class TaskService {
         this.projectRepository = projectRepository;
     }
 
-    public TaskResult getTaskById(Long taskId) {
-        Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new ResourceNotFoundException("Task", taskId));
-
+    public TaskResult getTaskById(Long taskId, String username) {
+        Task task = getOwnedTask(taskId, username);
         return TaskMapper.toResult(task);
     }
 
-    public Page<TaskResult> findAllTasksForProject(Long projectId, Pageable pageable) {
-        if (!projectRepository.existsById(projectId)) {
-            throw new ResourceNotFoundException("Project", projectId);
-        }
+    public Page<TaskResult> findAllTasksForProject(Long projectId, Pageable pageable, String username) {
+        Project project = getOwnedProject(projectId, username);
 
-        return taskRepository.findByProjectId(projectId, pageable)
+        return taskRepository.findByProjectId(project.getId(), pageable)
                 .map(TaskMapper::toResult);
     }
 
-    public Page<TaskResult> findAllTasksByStatus(Long projectId, TaskStatus status, Pageable pageable) {
-        return taskRepository.findByProjectIdAndStatus(projectId, status, pageable)
+    public Page<TaskResult> findAllTasksByStatus(Long projectId, TaskStatus status, Pageable pageable, String username) {
+        Project project = getOwnedProject(projectId, username);
+
+        return taskRepository.findByProjectIdAndStatus(project.getId(), status, pageable)
                 .map(TaskMapper::toResult);
     }
 
-    public TaskResult createTask(Long projectId, TaskRequest request) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Project", projectId));
+    public TaskResult createTask(Long projectId, String username, TaskRequest request) {
+        Project project = getOwnedProject(projectId, username);
 
         Task task = TaskMapper.toEntity(request);
         task.setProject(project);
 
-        Task saved = taskRepository.save(task);
-        return TaskMapper.toResult(saved);
+        return TaskMapper.toResult(taskRepository.save(task));
     }
 
-    public TaskResult updateTask(Long taskId, TaskRequest request) {
-        Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task", taskId));
+    public TaskResult updateTask(Long taskId, String username, TaskRequest request) {
+        Task task = getOwnedTask(taskId, username);
 
-        CheckAndThrowBadRequestException(task, "Completed tasks cannot be modified");
+        checkIfTaskCompleted(task, "Completed tasks cannot be modified");
 
         TaskMapper.updateEntity(task, request);
         return TaskMapper.toResult(taskRepository.save(task));
     }
 
-    public TaskResult patchTask(Long taskId, TaskRequest request) {
-        Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task", taskId));
+    public TaskResult patchTask(Long taskId, String username, TaskRequest request) {
+        Task task = getOwnedTask(taskId, username);
 
-        CheckAndThrowBadRequestException(task, "Completed tasks cannot be modified");
+        checkIfTaskCompleted(task, "Completed tasks cannot be modified");
 
         if (request.getTitle() != null) {
             task.setTitle(request.getTitle());
@@ -86,17 +82,37 @@ public class TaskService {
         return TaskMapper.toResult(taskRepository.save(task));
     }
 
-    public void deleteTask(Long taskId) {
-        /*if (!taskRepository.existsById(taskId)) {
-            throw new ResourceNotFoundException("Task", taskId);
-        }*/
-        Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task", taskId));
-        CheckAndThrowBadRequestException(task, "Completed tasks cannot be deleted");
+    public void deleteTask(Long taskId, String username) {
+        Task task = getOwnedTask(taskId, username);
 
-        taskRepository.deleteById(taskId);
+        checkIfTaskCompleted(task, "Completed tasks cannot be deleted");
+
+        taskRepository.delete(task);
     }
 
-    private void CheckAndThrowBadRequestException (Task task, String message){
+    private Task getOwnedTask(Long taskId, String username) {
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task", taskId));
+
+        String ownerUsername = task.getProject().getOwner().getUsername();
+        if (!ownerUsername.equals(username)) {
+            throw new AccessDeniedException("Not owner of task");
+        }
+
+        return task;
+    }
+
+    private Project getOwnedProject(Long projectId, String username) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Project", projectId));
+
+        if (!project.getOwner().getUsername().equals(username)) {
+            throw new AccessDeniedException("Not owner of project");
+        }
+
+        return project;
+    }
+
+    private void checkIfTaskCompleted (Task task, String message){
         if (task.getStatus() == TaskStatus.DONE) {
             throw new BadRequestException(message);
         }
