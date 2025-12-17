@@ -2,8 +2,7 @@ package be.vives.taskmanager.api.exception;
 
 import be.vives.taskmanager.application.exception.BadRequestException;
 import be.vives.taskmanager.application.exception.ConflictException;
-import be.vives.taskmanager.application.exception.ResourceNotFoundException;
-import be.vives.taskmanager.application.exception.UnauthorizedException;
+import be.vives.taskmanager.application.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,12 +28,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleConflict(ConflictException ex) {
         return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
     }
-
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<Map<String, Object>> handleUnauthorized(UnauthorizedException ex) {
-        return buildErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
-    }
-
 
     private ResponseEntity<Map<String, Object>> buildErrorResponse(HttpStatus status, String message) {
         return ResponseEntity.status(status).body(
