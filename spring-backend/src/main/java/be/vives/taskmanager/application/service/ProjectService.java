@@ -2,10 +2,11 @@ package be.vives.taskmanager.application.service;
 
 import be.vives.taskmanager.application.dto.request.ProjectRequest;
 import be.vives.taskmanager.application.dto.result.ProjectResult;
-import be.vives.taskmanager.application.exception.ResourceNotFoundException;
+import be.vives.taskmanager.application.exception.*;
 import be.vives.taskmanager.application.mapper.ProjectMapper;
 import be.vives.taskmanager.domain.model.Project;
 import be.vives.taskmanager.domain.model.User;
+import be.vives.taskmanager.domain.model.enumerator.TaskStatus;
 import be.vives.taskmanager.infrastructure.persistence.repository.ProjectRepository;
 import be.vives.taskmanager.infrastructure.persistence.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -72,9 +73,20 @@ public class ProjectService {
     }
 
     public void deleteProject(Long projectId) {
-        if (!projectRepository.existsById(projectId)) {
+        /*if (!projectRepository.existsById(projectId)) {
             throw new ResourceNotFoundException("Project", projectId);
+        }*/
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Project", projectId));
+
+        boolean hasOpenTasks = project.getTasks().stream()
+                .anyMatch(task -> task.getStatus() != TaskStatus.DONE);
+
+        if (hasOpenTasks) {
+            throw new BadRequestException("Project contains active tasks");
         }
+
         projectRepository.deleteById(projectId);
     }
 }
