@@ -14,7 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/projects")
+@RequestMapping("api/projects")
 @PreAuthorize("hasAnyRole('USER','ADMIN')")
 public class ProjectController {
 

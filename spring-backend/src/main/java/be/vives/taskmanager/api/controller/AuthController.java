@@ -4,6 +4,7 @@ import be.vives.taskmanager.application.dto.request.LoginRequest;
 import be.vives.taskmanager.application.dto.request.RegisterRequest;
 import be.vives.taskmanager.application.dto.result.AuthResult;
 import be.vives.taskmanager.application.service.AuthService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/auth")
+@CrossOrigin(exposedHeaders = "*")
+@RequestMapping("/api/auth")
+//@PermitAll
 public class AuthController {
 
     private final AuthService authService;

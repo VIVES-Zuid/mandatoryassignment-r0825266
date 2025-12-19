@@ -15,7 +15,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping
+@CrossOrigin(exposedHeaders = "*")
+@RequestMapping("/api")
 @PreAuthorize("hasAnyRole('USER','ADMIN')")
 public class TaskController {
 
