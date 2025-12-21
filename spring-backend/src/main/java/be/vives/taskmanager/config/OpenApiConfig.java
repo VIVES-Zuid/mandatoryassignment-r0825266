@@ -24,12 +24,12 @@ import org.springframework.context.annotation.Configuration;
                         - USER: can create, read, update projects and tasks
                         - ADMIN: same as USER + can delete projects and tasks + can make a user admin
 
-                        **Some business rules**
+                        **Some business rules you should know**
                         - Projects with active tasks cannot be deleted
-                        - Tasks with status DONE cannot be modified or deleted
+                        - Tasks with status DONE cannot be modified( except if the only field being changed is status) or deleted
                         """,
                 contact = @Contact(
-                        name = "VIVES",
+                        name = "Andang Kloran",
                         email = "andang.kloranawah@student.vives.be",
                         url = "https://www.vives.be"
                 )

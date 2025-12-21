@@ -64,7 +64,24 @@ public class TaskService {
     public TaskResult patchTask(Long taskId, String username, TaskRequest request) {
         Task task = getOwnedTask(taskId, username);
 
-        checkIfTaskCompleted(task, "Completed tasks cannot be modified");
+        //For completed/DONE tasks, allow PATCH only if the only field being changed is status
+        boolean isDone = task.getStatus() == TaskStatus.DONE;
+
+        if (isDone) {
+            boolean isTryingToChangeOtherFields = request.getTitle() != null || request.getDescription() != null || request.getDueDate() != null;
+
+            if (isTryingToChangeOtherFields) {
+                throw new BadRequestException("Completed tasks cannot be modified");
+            }
+
+            if (request.getStatus() == null) {
+                throw new BadRequestException("Completed tasks cannot be modified");
+            }
+
+            task.setStatus(request.getStatus());
+
+            return TaskMapper.toResult(taskRepository.save(task));
+        }
 
         if (request.getTitle() != null) {
             task.setTitle(request.getTitle());
@@ -81,6 +98,28 @@ public class TaskService {
 
         return TaskMapper.toResult(taskRepository.save(task));
     }
+
+
+    /*public TaskResult patchTask(Long taskId, String username, TaskRequest request) {
+        Task task = getOwnedTask(taskId, username);
+
+        checkIfTaskCompleted(task, "Completed tasks cannot be modified");
+
+        if (request.getTitle() != null) {
+            task.setTitle(request.getTitle());
+        }
+        if (request.getDescription() != null) {
+            task.setDescription(request.getDescription());
+        }
+        if (request.getStatus() != null) {
+            task.setStatus(request.getStatus());
+        }
+        if (request.getDueDate() != null) {
+            task.setDueDate(request.getDueDate());
+        }
+
+        return TaskMapper.toResult(taskRepository.save(task));
+    }*/
 
     public void deleteTask(Long taskId, String username, boolean isAdmin) {
         Task task = taskRepository.findById(taskId)
