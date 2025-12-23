@@ -34,6 +34,18 @@ public class JwtService {
         return getClaims(token).get("role", String.class);
     }
 
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser()
+                    .verifyWith(Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8)))
+                    .build()
+                    .parseSignedClaims(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private Claims getClaims(String token) {
         return Jwts.parser()
                 .verifyWith(Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8)))
