@@ -105,7 +105,10 @@ Het testprofiel wordt automatisch gebruikt bij integratietests.
 ---
 
 ## Projectstructuur
-´´´text
+```text
+## 📁 Projectstructuur
+
+```text
 src/main/java/be/vives/taskmanager/
 ├── api/
 │   └── controller/        # REST controllers
@@ -119,9 +122,13 @@ src/main/java/be/vives/taskmanager/
 ├── infrastructure/
 │   ├── persistence/       # JPA repositories
 │   └── security/          # JWT & security configuratie
-└── Config/                # PasswordConfig, SecurityConfig, OpenAiConfig, DataInitializer
-└── TaskmanagerApplication
-´´´
+├── config/                # Applicatie config
+│   ├── PasswordConfig
+│   ├── SecurityConfig
+│   ├── OpenApiConfig
+│   └── DataInitializer
+└── TaskmanagerApplication.java
+```
 
 ---
 
@@ -177,9 +184,13 @@ http://localhost:8080/swagger-ui.html
 
 ## Applicatie starten
 
+```bash
 mvn spring-boot:run
+```
 of
+```
 ./mvnw spring-boot:run
+```
 
 ---
 
