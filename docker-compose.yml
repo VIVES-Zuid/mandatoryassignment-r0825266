@@ -23,9 +23,9 @@ services:
       - database
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/taskmanager
-      SPRING_DATASOURCE_USERNAME: taskuser
-      SPRING_DATASOURCE_PASSWORD: taskpass
+      DB_URL: jdbc:mysql://database:3306/taskmanager
+      DB_USERNAME: taskuser
+      DB_PASSWORD: taskpass
     ports:
       - "8080:8080"
 
