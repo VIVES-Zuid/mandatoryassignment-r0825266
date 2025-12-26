@@ -105,7 +105,7 @@ Het testprofiel wordt automatisch gebruikt bij integratietests.
 ---
 
 ## Projectstructuur
-
+´´´text
 src/main/java/be/vives/taskmanager/
 ├── api/
 │   └── controller/        # REST controllers
@@ -121,7 +121,7 @@ src/main/java/be/vives/taskmanager/
 │   └── security/          # JWT & security configuratie
 └── Config/                # PasswordConfig, SecurityConfig, OpenAiConfig, DataInitializer
 └── TaskmanagerApplication
-
+´´´
 
 ---
 
