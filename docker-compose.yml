@@ -1,29 +1,42 @@
+version: "3.9"
 
 services:
-  frontend:
-    image: r0825266/frontend:latest
-    ports:
-      - "4200:80"
-    depends_on:
-      - backend
-
-  backend:
-    image: r0825266/backend:latest
-    env_file:
-      - ./backend/.env
-    ports:
-      - "5000:5000"
-    depends_on:
-      - database
-
   database:
-    image: mongo:latest
+    image: mysql:8.4
+    container_name: taskmanager-mysql
     restart: always
     environment:
-      MONGO_INITDB_DATABASE: warehouseDB
+      MYSQL_DATABASE: taskmanager
+      MYSQL_USER: taskuser
+      MYSQL_PASSWORD: taskpass
+      MYSQL_ROOT_PASSWORD: rootpass
+    ports:
+      - "3306:3306"
     volumes:
-      - mongo_data:/data/db
-      - ./database/init-warehouse.sh:/docker-entrypoint-initdb.d/init-warehouse.sh:ro
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    image: taskmanager-backend:latest
+    container_name: taskmanager-backend
+    restart: always
+    depends_on:
+      - database
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/taskmanager
+      SPRING_DATASOURCE_USERNAME: taskuser
+      SPRING_DATASOURCE_PASSWORD: taskpass
+    ports:
+      - "8080:8080"
+
+  frontend:
+    image: taskmanager-frontend:latest
+    container_name: taskmanager-frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
 
 volumes:
-  mongo_data:
+  mysql_data:
