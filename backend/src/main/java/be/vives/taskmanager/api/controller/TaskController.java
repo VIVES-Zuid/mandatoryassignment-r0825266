@@ -168,11 +168,4 @@ public class TaskController {
         taskService.deleteTask(id, username, isAdmin);
         return ResponseEntity.noContent().build();
     }
-
-    /*@DeleteMapping("/tasks/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long id, Authentication authentication) {
-        String username = authentication.getName();
-        taskService.deleteTask(id, username);
-        return ResponseEntity.noContent().build();
-    }*/
 }

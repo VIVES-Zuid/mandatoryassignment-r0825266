@@ -172,11 +172,4 @@ public class ProjectController {
         projectService.deleteProject(id, username, isAdmin);
         return ResponseEntity.noContent().build();
     }
-
-    /*@DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProject(@PathVariable Long id, Authentication authentication) {
-        String username = authentication.getName();
-        projectService.deleteProject(id, username);
-        return ResponseEntity.noContent().build();
-    }*/
 }

@@ -100,27 +100,6 @@ public class TaskService {
     }
 
 
-    /*public TaskResult patchTask(Long taskId, String username, TaskRequest request) {
-        Task task = getOwnedTask(taskId, username);
-
-        checkIfTaskCompleted(task, "Completed tasks cannot be modified");
-
-        if (request.getTitle() != null) {
-            task.setTitle(request.getTitle());
-        }
-        if (request.getDescription() != null) {
-            task.setDescription(request.getDescription());
-        }
-        if (request.getStatus() != null) {
-            task.setStatus(request.getStatus());
-        }
-        if (request.getDueDate() != null) {
-            task.setDueDate(request.getDueDate());
-        }
-
-        return TaskMapper.toResult(taskRepository.save(task));
-    }*/
-
     public void deleteTask(Long taskId, String username, boolean isAdmin) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new ResourceNotFoundException("Task", taskId));
@@ -134,14 +113,6 @@ public class TaskService {
 
         taskRepository.delete(task);
     }
-
-    /*public void deleteTask(Long taskId, String username) {
-        Task task = getOwnedTask(taskId, username);
-
-        checkIfTaskCompleted(task, "Completed tasks cannot be deleted");
-
-        taskRepository.delete(task);
-    }*/
 
     private Task getOwnedTask(Long taskId, String username) {
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task", taskId));

@@ -94,19 +94,6 @@ public class ProjectService {
         projectRepository.delete(project);
     }
 
-    /*public void deleteProject(Long projectId, String username) {
-        Project project = getOwnedProject(projectId, username);
-
-        boolean hasOpenTasks = project.getTasks().stream()
-                .anyMatch(task -> task.getStatus() != TaskStatus.DONE);
-
-        if (hasOpenTasks) {
-            throw new BadRequestException("Project contains active tasks");
-        }
-
-        projectRepository.delete(project);
-    }*/
-
     private Project getOwnedProject(Long projectId, String username) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ResourceNotFoundException("Project", projectId));
