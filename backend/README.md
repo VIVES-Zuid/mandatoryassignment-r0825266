@@ -132,6 +132,24 @@ src/main/java/be/vives/taskmanager/
 
 ---
 
+## API Base URL
+
+De backend API is bereikbaar via onderstaande base URL.
+
+- **Lokaal (development):**  
+  http://localhost:8080
+
+- **Productie (deployment):**  
+  https://api.taskmanager.be
+
+Alle API-endpoints zijn bereikbaar onder het `/api` pad, bijvoorbeeld:
+
+- `/api/auth/login`
+- `/api/projects`
+- `/api/tasks`
+
+---
+
 ## API-endpoints
 
 Alle endpoints zijn voorafgegaan door /api en beveiligd met JWT-authenticatie, tenzij anders vermeld.
@@ -174,11 +192,17 @@ Voltooide taken (DONE) hebben beperkingen
 | `PATCH`  | `/api/tasks/{id}`                             | Gedeeltelijke update. Bij `DONE` mag enkel de status gewijzigd worden | USER / ADMIN   |
 | `DELETE` | `/api/tasks/{id}`                             | Verwijdert een taak (voltooide taken kunnen niet verwijderd worden)   | **ADMIN only** |
 
+---
 
 ## API Documentatie
 
-Swagger UI:
+### Lokaal (development)
+Swagger UI is beschikbaar op:
 http://localhost:8080/swagger-ui.html
+
+### Productie (gehost)
+Na deployment is de Swagger UI beschikbaar via de publieke backend-URL, bijvoorbeeld:
+https://api.taskmanager.be/swagger-ui.html
 
 ---
 
@@ -191,6 +215,35 @@ of
 ```
 ./mvnw spring-boot:run
 ```
+
+---
+
+## Testaccounts (Demodata)
+
+Voor test- en evaluatiedoeleinden wordt de applicatie automatisch voorzien van demo-gebruikers wanneer deze wordt gestart met het dev- of prod-profiel.
+
+### Administratoraccount
+
+Gebruikersnaam: admin
+
+Wachtwoord: admin123
+
+Rol: ADMIN
+
+Rechten: Volledige toegang (projecten, taken, verwijderacties)
+
+### Standaard gebruikersaccount
+
+Gebruikersnaam: user
+
+Wachtwoord: user123
+
+Rol: USER
+
+Rechten: Beheer van eigen projecten en taken(zonder verwijderacties)
+
+Deze accounts worden automatisch aangemaakt bij het opstarten van de applicatie via een data-initializer.
+De initializer is idempotent en zal geen dubbele data aanmaken wanneer de database reeds gebruikers bevat.
 
 ---
 
