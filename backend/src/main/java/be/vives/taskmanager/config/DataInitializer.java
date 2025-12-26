@@ -11,7 +11,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 
 @Component
-@Profile({"dev", "prod"})
+//@Profile({"dev", "prod"})
+@Profile("dev")
 public class DataInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;

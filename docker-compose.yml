@@ -14,13 +14,19 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     image: taskmanager-backend:latest
     container_name: taskmanager-backend
     restart: always
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: prod
       DB_URL: jdbc:mysql://database:3306/taskmanager
@@ -29,14 +35,14 @@ services:
     ports:
       - "8080:8080"
 
-  frontend:
-    image: taskmanager-frontend:latest
-    container_name: taskmanager-frontend
-    restart: always
-    depends_on:
-      - backend
-    ports:
-      - "4200:80"
+  #frontend:
+  #  image: taskmanager-frontend:latest
+  #  container_name: taskmanager-frontend
+  #  restart: always
+  #  depends_on:
+  #    - backend
+  #  ports:
+  #    - "4200:80"
 
 volumes:
   mysql_data:

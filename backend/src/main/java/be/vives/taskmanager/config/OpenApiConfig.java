@@ -36,7 +36,7 @@ import org.springframework.context.annotation.Configuration;
         ),
         servers = {
                 @Server(url = "http://localhost:8080", description = "Local development"),
-                @Server(url = "https://api.taskmanager.example.com", description = "Production")
+                @Server(url = "https://api.taskmanager.be", description = "Production")
         },
         security = @SecurityRequirement(name = "bearerAuth")
 )

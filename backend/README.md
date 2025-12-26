@@ -161,6 +161,11 @@ Alle endpoints zijn voorafgegaan door /api en beveiligd met JWT-authenticatie, t
 | `POST`  | `/api/auth/register` | Registreert een nieuwe gebruiker met rol **USER**        | Publiek |
 | `POST`  | `/api/auth/login`    | Authenticeert een gebruiker en retourneert een JWT-token | Publiek |
 
+### Gebruikersbeheer (/api/user)
+
+| Methode | Endpoint              |   Beschrijving                                       | Toegang        |
+| ------- | --------------------  | ---------------------------------------------------- | -------        |
+| `POST`  | `/api/user/{id}/role` | Update van een use role naar **ADMIN**               | **Admin only** |
 
 ### Projectbeheer (/api/projects)
 
