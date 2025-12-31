@@ -18,6 +18,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm ->
                         sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

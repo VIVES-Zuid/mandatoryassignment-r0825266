@@ -23,7 +23,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@CrossOrigin(exposedHeaders = "*")
+//@CrossOrigin(exposedHeaders = "*")
 @RequestMapping("/api")
 @Tag(
         name = "Task Management",

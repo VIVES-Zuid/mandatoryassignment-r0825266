@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@CrossOrigin(exposedHeaders = "*")
+//@CrossOrigin(exposedHeaders = "*")
 @RequestMapping("/api/auth")
 //@PermitAll
 @Tag(

@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+//@CrossOrigin(exposedHeaders = "*")
 @RequestMapping("/api/users")
 @Tag(name = "User Management", description = "Administrative user management endpoints")
 @SecurityRequirement(name = "bearerAuth")
