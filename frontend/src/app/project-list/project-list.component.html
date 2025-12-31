@@ -1,0 +1,20 @@
+<section class="projects-container">
+    <h2 class="title">My Projects</h2>
+
+    @if (projects.length > 0) {
+    <ul class="project-list">
+        @for (project of projects; track project.id) {
+        <li class="project-card">
+            <h3 class="project-name">{{ project.name }}</h3>
+            <p class="project-description">
+                {{ project.description || 'No description provided.' }}
+            </p>
+        </li>
+        }
+    </ul>
+    } @else {
+    <div class="empty-state">
+        <p>No projects found.</p>
+    </div>
+    }
+</section>
