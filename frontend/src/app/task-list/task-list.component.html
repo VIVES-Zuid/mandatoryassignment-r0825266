@@ -1,0 +1,31 @@
+<div class="page">
+    <header class="topbar">
+        <button class="btn btn-ghost" type="button" (click)="back()">← Back</button>
+
+        <div class="right">
+            <h2 class="title">Tasks</h2>
+            <p class="subtitle">Project #{{ projectId }} • {{ total }} task(s)</p>
+        </div>
+    </header>
+
+    @if (tasks.length > 0) {
+    <div class="list">
+        @for (task of tasks; track task.id) {
+        <div class="row">
+            <div class="main">
+                <div class="row-title">{{ task.title }}</div>
+                @if (task.description) {
+                <div class="row-desc">{{ task.description }}</div>
+                }
+            </div>
+            <div class="badge">{{ task.status }}</div>
+        </div>
+        }
+    </div>
+    } @else {
+    <div class="empty">
+        <p class="empty-title">No tasks found.</p>
+        <p class="empty-sub">This project has no tasks yet.</p>
+    </div>
+    }
+</div>

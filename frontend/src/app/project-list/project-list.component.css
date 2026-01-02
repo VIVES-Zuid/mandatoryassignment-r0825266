@@ -1,50 +1,98 @@
-.projects-container {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 1rem;
+.page {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
 }
 
 .title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
+    margin: 0;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
 }
 
-.project-list {
+.subtitle {
+    margin: 6px 0 0;
+    opacity: 0.75;
+}
+
+.grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1rem;
-    list-style: none;
-    padding: 0;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
 }
 
-.project-card {
-    background: #ffffff;
+.card {
+    text-align: left;
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    border-radius: 16px;
+    padding: 16px;
+    background: #fff;
+    cursor: pointer;
+    transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.10);
+}
+
+.card-title {
+    font-weight: 800;
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.card-desc {
+    opacity: 0.75;
+    line-height: 1.35;
+    min-height: 38px;
+}
+
+.card-cta {
+    margin-top: 12px;
+    font-weight: 700;
+    opacity: 0.85;
+}
+
+.btn {
+    border: none;
     border-radius: 12px;
-    padding: 1.2rem;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-weight: 700;
 }
 
-.project-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+.btn-ghost {
+    background: rgba(0, 0, 0, 0.06);
 }
 
-.project-name {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+.btn-ghost:hover {
+    background: rgba(0, 0, 0, 0.10);
 }
 
-.project-description {
-    font-size: 0.95rem;
-    color: #555;
-}
-
-.empty-state {
+.empty {
+    border: 1px dashed rgba(0, 0, 0, 0.20);
+    border-radius: 16px;
+    padding: 26px;
     text-align: center;
-    color: #777;
-    padding: 2rem;
-    font-style: italic;
+    opacity: 0.85;
+}
+
+.empty-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0 0 6px;
+}
+
+.empty-sub {
+    margin: 0;
 }

@@ -1,0 +1,94 @@
+.page {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.right {
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.subtitle {
+    margin: 6px 0 0;
+    opacity: 0.75;
+}
+
+.btn {
+    border: none;
+    border-radius: 12px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.btn-ghost {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.btn-ghost:hover {
+    background: rgba(0, 0, 0, 0.10);
+}
+
+.list {
+    display: grid;
+    gap: 10px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 14px 16px;
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    border-radius: 14px;
+    background: #fff;
+}
+
+.row-title {
+    font-weight: 800;
+}
+
+.row-desc {
+    margin-top: 6px;
+    opacity: 0.75;
+}
+
+.badge {
+    align-self: start;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.06);
+    font-weight: 800;
+}
+
+.empty {
+    border: 1px dashed rgba(0, 0, 0, 0.20);
+    border-radius: 16px;
+    padding: 26px;
+    text-align: center;
+    opacity: 0.85;
+}
+
+.empty-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0 0 6px;
+}
+
+.empty-sub {
+    margin: 0;
+}

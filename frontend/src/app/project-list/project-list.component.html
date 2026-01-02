@@ -1,20 +1,31 @@
-<section class="projects-container">
-    <h2 class="title">My Projects</h2>
+<div class="page">
+    <header class="topbar">
+        <div>
+            <h2 class="title">My Projects</h2>
+            <p class="subtitle">Select a project to view its tasks</p>
+        </div>
+
+        <button class="btn btn-ghost" type="button" (click)="logout()">
+            Logout
+        </button>
+    </header>
 
     @if (projects.length > 0) {
-    <ul class="project-list">
+    <div class="grid">
         @for (project of projects; track project.id) {
-        <li class="project-card">
-            <h3 class="project-name">{{ project.name }}</h3>
-            <p class="project-description">
-                {{ project.description || 'No description provided.' }}
-            </p>
-        </li>
+        <button class="card" type="button" (click)="openProject(project.id)">
+            <div class="card-title">{{ project.name }}</div>
+            <div class="card-desc">
+                {{ project.description || 'No description' }}
+            </div>
+            <div class="card-cta">View tasks →</div>
+        </button>
         }
-    </ul>
+    </div>
     } @else {
-    <div class="empty-state">
-        <p>No projects found.</p>
+    <div class="empty">
+        <p class="empty-title">No projects found.</p>
+        <p class="empty-sub">Create one first, then come back here.</p>
     </div>
     }
-</section>
+</div>

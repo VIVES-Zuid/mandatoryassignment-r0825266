@@ -51,3 +51,30 @@ VALUES
   '$2a$10$8.GVTJHz11j03UuwWlS50OdzQ73YNrEVKKp3rrBScxJX.ylW8QhqS',
   'USER'
 );
+
+-- PROJECT (owned by user)
+INSERT INTO projects (name, description, owner_id, created_at)
+VALUES (
+  'Demo Project',
+  'Initial demo project',
+  (SELECT id FROM users WHERE username = 'user'),
+  NOW()
+);
+
+-- TASKS
+INSERT INTO tasks (title, description, status, due_date, project_id)
+VALUES
+(
+  'Setup backend',
+  'Initialize Spring Boot project',
+  'TODO',
+  DATE_ADD(CURDATE(), INTERVAL 3 DAY),
+  (SELECT id FROM projects WHERE name = 'Demo Project')
+),
+(
+  'Design database',
+  'Create entity relationships',
+  'IN_PROGRESS',
+  DATE_ADD(CURDATE(), INTERVAL 5 DAY),
+  (SELECT id FROM projects WHERE name = 'Demo Project')
+);
