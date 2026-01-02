@@ -1,37 +1,51 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mongo
+  name: mysql
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mongo
+      app: mysql
   template:
     metadata:
       labels:
-        app: mongo
+        app: mysql
     spec:
       containers:
-        - name: mongo
-          image: mongo:latest
-          env:
-            - name: MONGO_INITDB_ROOT_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: MONGO_USER
-            - name: MONGO_INITDB_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: MONGO_PASSWORD
+        - name: mysql
+          image: mysql:8.4
           ports:
-            - containerPort: 27017
+            - containerPort: 3306
+          env:
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: MYSQL_DATABASE
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_ROOT_PASSWORD
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_PASSWORD
+
+          # REQUIRED FOR INIT SCRIPT
           volumeMounts:
-            - name: init-script
+            - name: mysql-init
               mountPath: /docker-entrypoint-initdb.d
+
+      # REQUIRED FOR INIT SCRIPT
       volumes:
-        - name: init-script
+        - name: mysql-init
           configMap:
-            name: mongo-init-config
+            name: mysql-init

@@ -1,29 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mongo-init-config
+  name: mysql-config
 data:
-  init-warehouse.js: |
-    // Switch to target DB (no auth needed during first init)
-    db = db.getSiblingDB("warehouseDB");
-
-    // Create collection if missing
-    if (!db.getCollectionNames().includes("warehouseitems")) {
-      db.createCollection("warehouseitems");
-    }
-
-    // Insert sample data only if empty
-    if (db.warehouseitems.countDocuments() === 0) {
-      db.warehouseitems.insertMany([
-        { name: "Item A", quantity: 10, location: "Shelf 1" },
-        { name: "Item B", quantity: 5, location: "Shelf 2" },
-        { name: "Item C", quantity: 20, location: "Shelf 3" },
-        { name: "Item D", quantity: 8, location: "Shelf 1" },
-        { name: "Item E", quantity: 15, location: "Shelf 2" },
-        { name: "Item F", quantity: 12, location: "Shelf 3" },
-        { name: "Item G", quantity: 7, location: "Shelf 4" },
-        { name: "Item H", quantity: 25, location: "Shelf 1" },
-        { name: "Item I", quantity: 18, location: "Shelf 2" },
-        { name: "Item J", quantity: 30, location: "Shelf 3" }
-      ]);
-    }
+  MYSQL_DATABASE: taskmanager
+  DB_URL: jdbc:mysql://database:3306/taskmanager?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
