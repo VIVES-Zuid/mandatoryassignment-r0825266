@@ -14,5 +14,7 @@ data:
 
       - hostname: api.kloran-taskmanager.org
         service: http://backend.taskmanager-prod.svc.cluster.local:8080
+        originRequest:
+          noTLSVerify: true
 
       - service: http_status:404

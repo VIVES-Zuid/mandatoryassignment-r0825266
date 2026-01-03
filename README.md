@@ -243,3 +243,41 @@ Alle vereisten van **PE2, PE3 en PE4** zijn succesvol geïmplementeerd:
 - Veilige HTTPS exposure
 
 Dit project demonstreert een volledige DevOps workflow van development tot productie.
+
+## Screenshots
+
+**Terminal-output van `docker compose up`:**  
+![Terminal Screenshot](./screenshots/terminal.png)
+
+**Browserweergave van de werkende frontend:**  
+![Frontend Screenshot](./screenshots/frontend.png)
+
+**API Test Screenshot:**  
+![API Screenshot](./screenshots/backend.png)
+
+**Running containers binnen Docker:**  
+![Docker containers Screenshot](./screenshots/DockerDesktopImages.png)
+
+**Frontend en Backend images binnen DockerHub:**  
+![DockerHub images Screenshot](./screenshots/Dockerhub.png)
+
+**Terminal-output van Minikube deploy en suceesvol opstart**
+![Deployment](./screenshots/Deployment_to_minikube.png)
+![Frontend](./screenshots/Minikube_started_successfully1.png)
+
+**Browserweergave van de frontend via NodePort**
+![Frontend](./screenshots/terminalStartFrontend.png) 
+![Frontend](./screenshots/frontendLoginPage.png)
+
+**Backend logs, frontend logs, database logs, kubectl get all**
+![kubectl getAll](./screenshots/kubectl_getAll.png)
+![Frontend](./screenshots/kubectl_logs_backend.png)
+![Frontend](./screenshots/kubectl_logs_frontend.png)
+![Frontend](./screenshots/kubectl_logs_database.png)
+
+**CICD succesvol**
+![CICD](./screenshots/CICD.png)
+![CICD](./screenshots/CICD-jobs.png)
+
+**Running pods**
+![CICD](./screenshots/RunningPods.png)
