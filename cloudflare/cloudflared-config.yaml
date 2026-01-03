@@ -10,9 +10,9 @@ data:
 
     ingress:
       - hostname: app.kloran-taskmanager.org
-        service: http://frontend.default.svc.cluster.local:80
+        service: http://frontend.taskmanager-prod.svc.cluster.local:80
 
       - hostname: api.kloran-taskmanager.org
-        service: http://backend.default.svc.cluster.local:8080
+        service: http://backend.taskmanager-prod.svc.cluster.local:8080
 
       - service: http_status:404
