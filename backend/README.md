@@ -105,8 +105,6 @@ Het testprofiel wordt automatisch gebruikt bij integratietests.
 ---
 
 ## Projectstructuur
-```text
-## 📁 Projectstructuur
 
 ```text
 src/main/java/be/vives/taskmanager/
@@ -140,7 +138,7 @@ De backend API is bereikbaar via onderstaande base URL.
   http://localhost:8080
 
 - **Productie (deployment):**  
-  https://api.taskmanager.be
+  https://api.kloran-taskmanager.org
 
 Alle API-endpoints zijn bereikbaar onder het `/api` pad, bijvoorbeeld:
 
@@ -207,7 +205,7 @@ http://localhost:8080/swagger-ui.html
 
 ### Productie (gehost)
 Na deployment is de Swagger UI beschikbaar via de publieke backend-URL, bijvoorbeeld:
-https://api.taskmanager.be/swagger-ui.html
+https://api.kloran-taskmanager.org/swagger-ui.html
 
 ---
 
