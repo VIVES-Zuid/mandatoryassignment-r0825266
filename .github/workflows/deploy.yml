@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main
+      - feedback
     tags:
       - 'v*.*.*'
 
@@ -45,7 +45,7 @@ jobs:
         kubectl get nodes
 
     - name: Deploy to TEST
-      if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/feedback'
       run: |
         helm upgrade --install taskmanager ./helm/taskmanager \
           -n taskmanager-test \
