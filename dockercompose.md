@@ -1,59 +1,121 @@
+## Docker Compose Deployment Documentatie
 
-## 1. Korte beschrijving van de drie services
+### 1. Korte beschrijving van de drie services
 
 **Frontend**
-De frontend is een Angular-applicatie die de gebruikersinterface van onze Warehouse-applicatie verzorgt. Hier kunnen gebruikers de beschikbare items bekijken, en de gegevens worden dynamisch opgehaald van de backend via API-aanvragen.
+De frontend is een Angular-applicatie die de gebruikersinterface van de Task Manager applicatie verzorgt. Gebruikers kunnen zich aanmelden en hun projecten en taken bekijken. De frontend communiceert uitsluitend met de backend via REST-API’s.
 
 **Backend**
-De backend is een Node.js/Express API die fungeert als tussenlaag tussen de frontend en de database. Deze service verwerkt API-aanvragen van de frontend en haalt de juiste gegevens op uit de MongoDB-database. De backend zorgt er ook voor dat de data consistent en correct wordt aangeboden.
+De backend is een Spring Boot (Java) applicatie die fungeert als API-laag. Deze service verwerkt login- en authenticatieverzoeken (JWT), beheert projecten en taken en communiceert met de MySQL-database via JPA/Hibernate.
 
 **Database**
-De database gebruikt MongoDB als opslag voor onze warehouse-items. Hier worden alle itemgegevens, zoals naam, hoeveelheid en locatie, opgeslagen. De database wordt automatisch geïnitialiseerd met enkele voorbeelditems via een init-script.
+De database gebruikt MySQL 8.x voor persistente opslag. De database bevat tabellen voor users, projects en tasks. Bij het opstarten wordt de database automatisch geïnitialiseerd met een SQL-script.
 
 ---
 
-## 2. Docker Hub links
-
+### 2. Docker Hub images
 * Frontend image: [https://hub.docker.com/r/r0825266/frontend]
 * Backend image: [https://hub.docker.com/r/r0825266/backend]
 
 ---
 
-## 3. Uitleg over het Docker Compose bestand
+### 3. Uitleg van docker-compose.yml
 
-**Services in `docker-compose.yml`:**
+**Services**
+- frontend: Angular + Nginx, bereikbaar via poort 4200
+- backend: Spring Boot API, bereikbaar via poort 8080
+- database: MySQL 8.x, enkel intern bereikbaar
 
-* `frontend`: de Angular-app die via poort 4200 bereikbaar is.
-* `backend`: de Node.js API, bereikbaar via poort 5000, verbindt met de database.
-* `database`: MongoDB, gebruikt een volume voor persistente opslag en een init-script om standaardgegevens te laden.
-
-**Communicatie tussen services:**
-
-* De frontend stuurt HTTP-aanvragen naar de backend (`http://localhost:5000/api/warehouse-items`).
-* De backend maakt verbinding met de MongoDB-database en de opgegeven poort intern in het netwerk.
-
-**Open poorten:**
-
-* Frontend: `4200` (externe toegang voor gebruikers)
-* Backend: `5000` (open voor API-testen)
-* Database: geen externe poort gemapt; alleen interne communicatie met backend.
+**Communicatie**
+- Frontend → Backend: http://backend:8080/api
+- Backend → Database: jdbc:mysql://database:3306/taskmanager
 
 ---
 
-## 4. Gebruikte environment variables
+### 4. Environment variables
 
-In het `.env` bestand van de backend staan de volgende variabelen:
-
-MONGO_URL=mongodb://database:27017/warehouseDB
-PORT=5000
-
-
-* `MONGO_URL`: URL voor de backend om verbinding te maken met de database.
-* `PORT`: poort waarop de backend luistert.
+SPRING_DATASOURCE_URL=jdbc:mysql://database:3306/taskmanager  
+SPRING_DATASOURCE_USERNAME=taskuser  
+SPRING_DATASOURCE_PASSWORD=taskpass  
+SPRING_JPA_HIBERNATE_DDL_AUTO=none  
 
 ---
 
-## 5. Screenshots
+### Good catch — this section needs to be **clear, testable, and consistent**.
+Here is a **clean, corrected version** you can paste straight into your `dockercompose.md`.
+
+---
+
+## 5. Toegang & Testen
+
+### Starten van de applicatie
+
+Start alle drie de services met Docker Compose:
+
+```bash
+docker compose up -d
+```
+
+Controleer of alle containers correct draaien:
+
+```bash
+docker compose ps
+```
+
+### Backend testen
+
+De backend API is bereikbaar via:
+
+```
+http://localhost:8080/api
+```
+
+Voorbeeld test (login endpoint):
+
+```
+POST http://localhost:8080/api/auth/login
+```
+
+Met JSON body:
+
+```json
+{
+  "username": "user",
+  "password": "user123"
+}
+```
+
+Een succesvolle login geeft een **JWT-token** terug.
+
+### Frontend testen
+
+De frontend is bereikbaar via:
+
+```
+http://localhost:4200
+```
+
+Bij het openen van de applicatie verschijnt het login-scherm.
+Na succesvol inloggen wordt de gebruikersinterface met projecten en taken getoond.
+
+### Testgebruikers
+
+De database wordt geïnitialiseerd met de volgende testaccounts:
+
+| Gebruiker     | Username | Password   |
+| ------------- | -------- | ---------- |
+| Regular user  | `user`   | `user123`  |
+| Administrator | `admin`  | `admin123` |
+
+### Verwacht resultaat
+
+* Frontend kan communiceren met de backend
+* Backend kan data ophalen uit de database
+* Authenticatie werkt correct voor beide gebruikersrollen
+
+---
+
+### 6. Screenshots
 
 **Terminal-output van `docker compose up`:**  
 ![Terminal Screenshot](./screenshots/terminal.png)
@@ -72,9 +134,6 @@ PORT=5000
 
 ---
 
-## 6. Conclusie / Reflectie
+### 7. Reflectie
 
-Tijdens deze opdracht heb ik geleerd hoe je een multi-service applicatie opzet met Docker Compose. Het belangrijkste inzicht was het correct configureren van netwerken en dependencies tussen services, zodat frontend, backend en database naadloos met elkaar communiceren.
-
-Een uitdaging was het opzetten van de MongoDB-init script en ervoor zorgen dat de backend correct wacht tot de database beschikbaar is. Uiteindelijk werkte alles soepel en heb ik ook geleerd hoe ik mijn images kan publiceren op Docker Hub en deze kan gebruiken in Docker Compose.
-
+Deze opdracht toonde hoe een multi-service applicatie lokaal kan worden opgezet met Docker Compose. De focus lag op correcte service-communicatie, database-initialisatie en image-hergebruik voor Kubernetes.

@@ -1,100 +1,52 @@
-# Minikube Deployment Documentatie 
+# Minikube Deployment Documentatie
 
 ## 1. Inleiding
 
-In dit deel van de opdracht heb ik mijn bestaande drieservicetoepassing (Angular frontend, Node.js backend en MongoDB database) opnieuw opgezet, maar deze keer niet met Docker Compose, maar met **Kubernetes op Minikube**.
-Het doel is om dezelfde applicatie als in deel 2 volledig te containeriseren en correct te deployen in een Kubernetes-cluster, waarbij elke service zijn eigen Deployment en Service krijgt.
+In deze opdracht werd de bestaande drieservicetoepassing (Angular frontend, Spring Boot backend en MySQL database) gedeployed op Kubernetes via Minikube.
 
 ---
 
-## 2. Overzicht van de drie services
+## 2. Overzicht van de services
 
-### **Frontend (Angular)**
+**Frontend**
+Angular frontend gedeployed als Deployment met NodePort service voor externe toegang.
 
-De Angular-app visualiseert de inhoud van de databank. Ze haalt warehouse-items op via de backend API.
-Deze draait in Kubernetes als een Deployment met NodePort zodat ik hem extern kan openen.
+**Backend**
+Spring Boot backend die API-logica, JWT-authenticatie en database-communicatie verzorgt.
 
-### **Backend (Node.js + Express API)**
-
-De backend verzorgt alle API-logica.
-Hij maakt verbinding met de MongoDB-service binnen het cluster via de interne servicenaam `mongo`.
-De backend haalt alle warehouse-items op en stuurt ze door naar de frontend.
-
-### **Database (MongoDB)**
-
-De MongoDB container draait in Kubernetes als een aparte Deployment met:
-
-* een Secret voor de username + password
-* een ConfigMap voor de databasenaam
-* een eigen ClusterIP service
-
-De database is enkel intern toegankelijk vanuit de backend.
+**Database**
+MySQL database met ConfigMap voor databaseconfiguratie en Secret voor credentials.
 
 ---
 
-## 3. MongoDB Credentials
-Deze referenties werden gebruikt in de Kubernetes Secret.
-De waarden in het secret.yaml-bestand zijn Base64-gecodeerde versies van het volgende:
+## 3. Secrets & ConfigMaps
 
-MONGO_USER = warehouse_user_Andang  
-MONGO_PASSWORD = Andang@79
+Secrets bevatten databasegebruikers en wachtwoorden.  
+ConfigMaps bevatten databanknaam en configuratie.
 
-Base64 encoding:
-warehouse_user → d2FyZWhvdXNlX3VzZXJfQW5kYW5n
-warehouse_pass → QW5kYW5nQDc5
-
-Gegenereerd in CLI(powershell) met: 
-[Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("warehouse_user_Andang"))
-d2FyZWhvdXNlX3VzZXJfQW5kYW5n
-[Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("Andang@79"))
-QW5kYW5nQDc5
 ---
 
-## 4. ConfigMap & Secret voor MongoDB
+## 4. Netwerk
 
-Ik gebruik een ConfigMap voor de databanknaam en een Secret voor de login-gegevens.
-De backend maakt verbinding via:
-
-```
-mongodb://warehouse_user:warehouse_pass@mongo:27017/warehouseDB?authSource=admin
-```
-
-Dit maakt de communicatie veilig en volgens best practices.
+- Backend → Database: jdbc:mysql://database:3306/taskmanager
+- Frontend → Backend: via port-forward (NodePort werd ook getest voor leerdoeleinden)
 
 ---
 
 ## 5. Deployments & Services
 
-### **Database**
-
-* **Deployment:** `mongo` image + omgevingsvariabelen uit Secret/ConfigMap
-* **Service:** ClusterIP, bereikbaar als `mongo:27017` binnen het cluster
-
-### **Backend**
-
-* **Deployment:** gebruikt Docker Hub image `r0825266/backend:latest`
-* **Service:** ClusterIP op poort 5000
-
-### **Frontend**
-
-* **Deployment:** gebruikt Docker Hub image `r0825266/frontend:latest`
-* **Service:** NodePort (poort 31000) zodat ik de frontend extern kan openen via Minikube
+- Database: Deployment + ClusterIP service
+- Backend: Deployment + ClusterIP service
+- Frontend: Deployment + NodePort service
 
 ---
 
 ## 6. Deployen naar Minikube
 
-### **Starten van het Minikube cluster**
-
-minikube start --memory=4096 --cpus=2
-
-
-### **Deployments toepassen**
-
-kubectl apply -f k8s-manifests/database
-kubectl apply -f k8s-manifests/backend
-kubectl apply -f k8s-manifests/frontend
-
+minikube start --memory=4096 --cpus=2  
+kubectl apply -f k8s-manifests/database  
+kubectl apply -f k8s-manifests/backend  
+kubectl apply -f k8s-manifests/frontend 
 
 ### **Controle**
 kubectl get all
@@ -102,14 +54,27 @@ kubectl logs deployment/backend
 kubectl logs deployment/frontend
 kubectl logs deployment/mongo
 
-### **Frontend openen**
+---
 
-1. Haal het Minikube frontend url op van de root van de applicatie map:  minikube service frontend --url
+## 7. Toegang
 
-2. Open de weergegeven link (url): http://127.0.0.1:28651
+Backend testen:
+kubectl port-forward service/backend 8080:8080
 
+Frontend openen:
+minikube service frontend
 
-De applicatie toont dan de lijst met warehouse-items die uit de database komen.
+Test user login details:
+Username: user               Username: admin
+Password: user123            Password: admin 123
+
+---
+
+## 8. Validatie
+
+kubectl get pods  
+kubectl get svc  
+kubectl logs deploy/backend  
 
 ---
 
@@ -120,20 +85,17 @@ De applicatie toont dan de lijst met warehouse-items die uit de database komen.
 ![Frontend](./screenshots/Minikube_started_successfully1.png)
 
 **2. Browserweergave van de frontend via NodePort**
-![Frontend](./screenshots/frontend.png)
+![Frontend](./screenshots/terminalStartFrontend.png) 
+![Frontend](./screenshots/frontendLoginPage.png)
 
 **3. Backend logs, frontend logs, database logs, kubectl get all**
 ![kubectl getAll](./screenshots/kubectl_getAll.png)
-![Frontend](./screenshots/kubectl_Logs.png)
-
+![Frontend](./screenshots/kubectl_logs_backend.png)
+![Frontend](./screenshots/kubectl_logs_frontend.png)
+![Frontend](./screenshots/kubectl_logs_database.png)
 
 ---
 
-## 8. Reflectie
+## 9. Reflectie
 
-Dit deel van de opdracht gaf me een goed inzicht in hoe container-gebaseerde applicaties evolueren van Docker Compose naar Kubernetes. In het begin was het even wennen om alles op te delen in Deployments, Services, ConfigMaps en Secrets, maar eenmaal de structuur duidelijk werd, zag ik hoe krachtig en flexibel Kubernetes eigenlijk is.
-
-Een kleine uitdaging was het correct configureren van de database-authenticatie in combinatie met de backend, maar door Secrets en ConfigMaps te gebruiken werd het geheel overzichtelijk en veilig.
-Ook het werken met NodePort en het ontdekken van het Minikube IP was leerrijk.
-
-Al bij al heb ik door deze oefening een veel beter begrip gekregen van hoe cloud-native applicaties er in de praktijk uitzien.
+Deze opdracht gaf inzicht in Kubernetes Deployments, Services, ConfigMaps en Secrets. De Minikube-opzet vormt de basis voor verdere cloud-deployment.
