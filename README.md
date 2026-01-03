@@ -221,7 +221,7 @@ De applicatie is veilig publiek toegankelijk gemaakt via **Cloudflare Tunnel**.
 
 **Domeinen:**
 - Frontend: https://app.kloran-taskmanager.org
-- Backend: https://api.kloran-taskmanager.org           Backend documentatie(swagger): https://api.kloran-taskmanager.org
+- Backend: https://api.kloran-taskmanager.org           Backend documentatie(swagger): https://api.kloran-taskmanager.org/swagger-ui.html
 
 **Voordelen:**
 - HTTPS via Cloudflare
