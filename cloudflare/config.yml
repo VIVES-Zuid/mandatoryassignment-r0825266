@@ -1,0 +1,11 @@
+tunnel: b915b45c-ec8b-4420-9b57-554008a01663
+credentials-file: /etc/cloudflared/credentials.json
+
+ingress:
+  - hostname: app.kloran-taskmanager.org
+    service: http://frontend:80
+
+  - hostname: api.kloran-taskmanager.org
+    service: http://backend:8080
+
+  - service: http_status:404
