@@ -1,0 +1,12 @@
+frontend:
+  replicas: 2
+
+backend:
+  replicas: 2
+
+database:
+  name: taskmanager
+  user: taskuser
+  password: taskpass
+  rootPassword: rootpass
+  image: mysql:8.4

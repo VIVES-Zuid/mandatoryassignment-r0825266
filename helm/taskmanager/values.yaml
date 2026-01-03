@@ -1,0 +1,24 @@
+frontend:
+  image:
+    repository: r0825266/frontend
+    tag: latest
+  replicas: 1
+  service:
+    type: ClusterIP
+    port: 80
+
+backend:
+  image:
+    repository: r0825266/backend
+    tag: latest
+  replicas: 1
+  service:
+    type: ClusterIP
+    port: 8080
+
+database:
+  image: mysql:8.4
+  name: taskmanager
+  user: taskuser
+  password: taskpass
+  rootPassword: rootpass

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init
+data:
+  init.sql: |
+{{ .Files.Get "sql/init.sql" | indent 4 }}
